@@ -1,0 +1,26 @@
+#summary Software Requirements Document
+#labels Phase-Requirements
+
+= MEMEPLEX (밈플렉스) =
+= Software Requirements Document =
+
+==서문==
+====문서의 목적과 한계====
+본 문서는 프로젝트의 요구사항(requirements)을 예상 독자들의 수준에 맞추어 설명하고, 앞으로 수행할 설계(design)와 구현(implmentation)을 위한 지침을 제공한다. 전체 문서의 분량은 조원 4人을 기준으로, 스프링노트 인쇄시 A4 20~32p 이내가 되도록 제한했다. 또한 실제 모델이 이미 존재하여 타당성 연구(feasibility study)가 불필요한 부분에 대해서는 타당성 연구에 대한 내용을 생략하였다. 그리고 본 문서의 전체적인 구조는 기본적으로 강의자료(Chapter 4)의 요구사항 문서 예시에 따랐지만, 일부 프로젝트 성격에 맞지 않는다고 생각되는 부분은 변경하여 적용하였다.
+ 
+====예상 독자====
+ * 프로젝트를 감독하는 전문가 (Professor, TA)
+ * 설계와 구현을 담당할 준전문가 집단 (개발팀)
+ * 서비스를 이용할 준전문가 집단(모바일 프로그래밍을 수강하는 전체 학생, 약 30명)
+
+== Functional Requirements ==
+
+== Non-functional Requirements ==
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
