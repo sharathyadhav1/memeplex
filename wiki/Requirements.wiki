@@ -1,11 +1,10 @@
 #summary Software Requirements Specification for The Memeplex Project
 #labels Phase-Requirements
 
+http://memeplex.googlecode.com/svn/wiki/images/memeplex.png
 = Software Requirements Specification =
-== MEMEPLEX (밈플렉스) ==
 
-
-=서문=
+==서문==
 ====문서의 목적과 한계====
 본 문서는 프로젝트의 요구사항(software requirements)을 예상 독자들의 수준에 맞추어 설명하고, 앞으로 수행할 설계(software design)와 구현(software implmentation)을 위한 지침을 제공한다.
  
