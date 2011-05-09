@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" android:padding="10dip">
+
+	<TextView android:layout_width="fill_parent" android:id="@+id/TextTags"
+		android:text="학교 여자 숙제 연애" android:layout_height="wrap_content"
+		android:gravity="center" android:layout_weight="0" />
+
+	<EditText android:id="@+id/EditTextAuthor"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:maxLines="1" android:inputType="textImeMultiLine"
+		android:maxLength="20" android:layout_toLeftOf="@+id/ButtonAttachImage"
+		android:hint="닉네임" />
+
+	<EditText android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:hint="내용" android:gravity="top"
+		android:layout_weight="1"
+		android:inputType="textMultiLine" android:id="@+id/EditTextMessage"
+		android:maxLength="200" />
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		android:orientation="horizontal">
+		
+		<TextView android:layout_width="80dip"
+			android:text="Tag(s)" android:layout_height="wrap_content"
+			android:gravity="center" />
+		
+		<EditText android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:gravity="top"
+			android:inputType="textMultiLine" android:id="@+id/EditTextTags"
+			android:maxLength="200" />
+	</LinearLayout>
+	
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_weight="0"
+		android:orientation="horizontal">
+		
+		<TextView android:layout_width="80dip"
+			android:layout_height="wrap_content"
+			android:text="Image(s)"
+			android:gravity="center" />
+		
+		<EditText android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:gravity="top"
+			android:layout_weight="1"
+			android:inputType="textMultiLine" android:id="@+id/EditTextTags"
+			android:maxLength="200" />
+		
+		<Button android:id="@+id/ButtonAddImage"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:text="추가" />
+	</LinearLayout>
+	
+	<Button android:id="@+id/ButtonWrite"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="쓰기" android:layout_alignParentRight="true" />
+	
+</LinearLayout>

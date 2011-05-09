@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:padding="4dip">
+
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/TextViewMessage"
+		android:textSize="16dip" android:padding="2dip" android:textColor="#FFFFFF"
+		android:layout_alignParentLeft="true" android:layout_toLeftOf="@+id/TextViewReply" />
+
+	<TextView android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/TextViewWriteInfo"
+		android:textSize="14dip" android:paddingLeft="4dip"
+		android:layout_below="@+id/TextViewMessage"
+		android:layout_alignParentLeft="true" />
+		
+	<ImageView android:id="@+id/ImageHasImage" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:src="@drawable/icon_has_image"
+		android:layout_marginLeft="5dip"
+		android:layout_below="@+id/TextViewMessage"
+		android:layout_toRightOf="@+id/TextViewWriteInfo" />
+
+	<ImageView android:id="@+id/ImageHasVoiceRecord" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:src="@drawable/icon_has_voice_record"
+		android:layout_marginLeft="5dip"
+		android:layout_below="@+id/TextViewMessage"
+		android:layout_toRightOf="@+id/ImageHasImage" />
+
+	<TextView android:id="@+id/TextViewReply"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_centerVertical="true" android:layout_alignParentRight="true"
+		android:textSize="16dip" android:maxLines="1" android:gravity="center"
+		android:paddingLeft="3dip" android:paddingRight="3dip" />
+
+</RelativeLayout>

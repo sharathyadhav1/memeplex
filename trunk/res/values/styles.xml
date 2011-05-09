@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<style name="Theme.MainTheme" parent="android:style/Theme.Translucent.NoTitleBar">
+	</style>
+	<style name="ListRowSingleLineTextViewLarge">
+		<item name="android:textSize">18sp</item>
+		<item name="android:maxLines">1</item>
+		<item name="android:padding">3sp</item>
+		<item name="android:gravity">center_horizontal|center</item>
+		<item name="android:textColor">#EAEAEA</item>
+	</style>
+	<style name="ListRowMultiLineTextViewLarge">
+		<item name="android:textSize">18sp</item>
+		<item name="android:padding">3sp</item>
+		<item name="android:gravity">center_horizontal|center</item>
+		<item name="android:textColor">#EEEEEE</item>
+	</style>
+</resources>

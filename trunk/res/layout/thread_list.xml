@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<TextView android:layout_width="fill_parent" android:id="@+id/TextTags"
+		android:text="학교 여자 숙제 연애" android:layout_height="wrap_content"
+		android:gravity="center" android:layout_weight="0" />
+		
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_marginTop="4dip"
+		android:orientation="horizontal" android:layout_weight="0">
+
+		<EditText android:layout_width="fill_parent" android:id="@+id/EditSearch"
+			android:hint="검색어" android:layout_height="wrap_content"
+			android:gravity="center" android:layout_weight="1" />
+
+		<Button android:id="@+id/RadioRecently"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_weight="0" android:text="검색" />
+	</LinearLayout>
+	
+	<ListView android:layout_width="fill_parent"
+		android:layout_height="fill_parent" android:id="@android:id/list"
+		android:layout_weight="1" />
+
+	<TextView android:layout_width="fill_parent" android:id="@android:id/empty"
+		android:text="등록된 글이 없습니다" android:layout_height="fill_parent"
+		android:gravity="center" android:layout_weight="0" />
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:layout_marginTop="4dip"
+		android:orientation="horizontal" android:layout_weight="0">
+		<Button android:id="@+id/ButtonBackToTagList"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_weight="1" android:text="태그로 돌아가기" />
+
+		<Button android:id="@+id/ButtonWriteOnThisTag"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_weight="1" android:text="이 태그에 글 쓰기" />
+	</LinearLayout>
+</LinearLayout>
