@@ -4,24 +4,5 @@
 http://memeplex.googlecode.com/svn/wiki/images/memeplex.png
 = Software Requirements Specification =
 
-==서문==
-====문서의 목적과 한계====
-본 문서는 프로젝트의 요구사항(software requirements)을 예상 독자들의 수준에 맞추어 설명하고, 앞으로 수행할 설계(software design)와 구현(software implmentation)을 위한 지침을 제공한다.
- 
-====예상 독자====
- * 프로젝트를 감독하는 전문가 (Professor, TA)
- * 설계와 구현을 담당할 준전문가 집단 (개발팀)
- * 서비스를 이용할 준전문가 집단(모바일 프로그래밍을 수강하는 전체 학생, 약 30명)
-
-== Feasibility Studies ==
-== Functional Requirements ==
-
-== Non-functional Requirements ==
-
-
-= Details =
-
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+==안내==
+요구사항 문서는 [http://code.google.com/p/memeplex/downloads/list 중간보고서]로 대체하였습니다.
