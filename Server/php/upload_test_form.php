@@ -1,12 +1,12 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<form action="add_location.php" method="post" enctype="multipart/form-data">
-	<input type="text" name="device_id" value="AAAAAAAAAAAAAAAAAAAA"><br/>
-	<input type="text" name="location_id" value="135"><br/>
-	<input type="text" name="location_name" value="일마레"><br/>
-	<input type="text" name="latitude" value="13.5353535"><br/>
-	<input type="text" name="longitude" value="32.535235"><br/>
-	<input type="text" name="score" value="5"><br/>
-	<textarea name="comment"></textarea><br/>
+<form action="thread_save.php" method="post" enctype="multipart/form-data">
+	document_srl: <input type="text" name="document_srl" value=""> (수정시 document_srl 입력)<br/> 
+	device_id: <input type="text" name="device_id" value="8982050903421338174356921021070559"><br/>
+	tag_srl_list: <input type="text" name="tag_srl_list" value="3,6,8"><br/>
+	nick_name: <input type="text" name="nick_name" value="명드래곤"><br/>
+	latitude: <input type="text" name="latitude" value="13.5353535"><br/>
+	longitude: <input type="text" name="longitude" value="32.535235"><br/>
+	content: <textarea name="content"></textarea><br/>
 	Image: <input type="file" name="picture"><br/>
 	<input type="submit" value="submit">
 </form>

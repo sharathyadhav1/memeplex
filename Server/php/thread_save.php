@@ -5,6 +5,7 @@ include ("connection.php");
 // Parameters
 $req_document_srl = $_POST["document_srl"];
 $req_device_id = $_POST["device_id"];
+$req_tag_srl_list = $_POST["tag_srl_list"];
 $req_nick_name = $_POST["nick_name"];
 $req_picture_path = $_POST["picture_path"];
 $req_audio_path = $_POST["audio_path"];
@@ -31,10 +32,10 @@ else
 		$next_increment 	= 0;
 		$qShowStatus 		= "SHOW TABLE STATUS LIKE 'documents'";
 		$qShowStatusResult 	= mysql_query($qShowStatus) or $is_error = true;
-		
+
 		$row = mysql_fetch_assoc($qShowStatusResult);
 		$next_increment = $row['Auto_increment'];
-		
+
 		//echo "File Upload Succeeded<br/>";
 		if (!is_dir($next_increment)) {
 			mkdir($next_increment,0777);
@@ -54,15 +55,37 @@ if ($req_document_srl) // Modify
 	$query = "UPDATE documents SET nick_name='$req_nick_name', picture_path='$picture_path', audio_path='$audio_path', ";
 	$query.= "location='$req_latitude,$req_longitude', ";
 	$query.= "device_id ='$req_device_id', ";
-	$query.= "comment='$req_comment' "; 
+	$query.= "content='$req_content' ";
 	$query.= "WHERE (document_srl = '$req_document_srl')";
 	$result_update = mysql_query($query, $connect) or die("error");
+
+	// delete relations first (will be added again)
+	$query = "DELETE FROM document_tags WHERE document_srl = $req_document_srl";
+	$result_delete = mysql_query($query, $connect) or die("error");
+
+	// document_srls table
+	$array_srl_list = explode(",", $req_tag_srl_list);
+	foreach ($array_srl_list as $key=>$val) {
+		$query = "INSERT INTO document_tags (document_srl, tag_srl) ";
+		$query .= "VALUES (".$req_document_srl.", $val)";
+		$result_insert = mysql_query($query, $connect) or die("error");
+	}
 }
 else // New
 {
+	// document table
 	$query = "INSERT INTO documents (nick_name, picture_path, audio_path, location, device_id, content) ";
 	$query .= "VALUES ('$req_nick_name', '$picture_path', '$audio_path', '$req_latitude,$req_longitude', '$req_device_id', '$req_comment')";
 	$result_insert = mysql_query($query, $connect) or die("error");
+	$inserted_document_srl = mysql_insert_id();
+
+	// document_srls table
+	$array_srl_list = explode(",", $req_tag_srl_list);
+	foreach ($array_srl_list as $key=>$val) {
+		$query = "INSERT INTO document_tags (document_srl, tag_srl) ";
+		$query .= "VALUES (".$inserted_document_srl.", $val)";
+		$result_insert = mysql_query($query, $connect) or die("error");
+	}
 }
 
 // XML Output
