@@ -42,7 +42,7 @@ while($row=mysql_fetch_array($result))
 	$writer->writeAttribute('nick_name', $row[nick_name]);
 	$writer->writeAttribute('picture_path', $row[picture_path]);
 	$writer->writeAttribute('audio_path', $row[audio_path]);
-	$writer->writeAttribute('location_path', $row[location_path]);
+	$writer->writeAttribute('location', $row[location]);
 	$writer->writeAttribute('timestamp', $row[timestamp]);
 	$writer->writeAttribute('device_id', $row[device_id]);
 	$writer->writeAttribute('content', $row[content]);
