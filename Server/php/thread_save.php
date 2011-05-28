@@ -1,4 +1,3 @@
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <?php
 include ("connection.php");
 
@@ -53,38 +52,52 @@ else
 if ($req_document_srl) // Modify
 {
 	$query = "UPDATE documents SET nick_name='$req_nick_name', picture_path='$picture_path', audio_path='$audio_path', ";
-	$query.= "location='$req_latitude,$req_longitude', ";
+	$query.= "latitude='$req_latitude', longitude='$req_longitude', ";
 	$query.= "device_id ='$req_device_id', ";
 	$query.= "content='$req_content' ";
 	$query.= "WHERE (document_srl = '$req_document_srl')";
-	$result_update = mysql_query($query, $connect) or die("error");
+	$result_update = mysql_query($query, $connect) or die("error".__LINE__);
 
 	// delete relations first (will be added again)
 	$query = "DELETE FROM document_tags WHERE document_srl = $req_document_srl";
-	$result_delete = mysql_query($query, $connect) or die("error");
+	$result_delete = mysql_query($query, $connect) or die("error".__LINE__);
 
 	// document_srls table
 	$array_srl_list = explode(",", $req_tag_srl_list);
 	foreach ($array_srl_list as $key=>$val) {
 		$query = "INSERT INTO document_tags (document_srl, tag_srl) ";
 		$query .= "VALUES (".$req_document_srl.", $val)";
-		$result_insert = mysql_query($query, $connect) or die("error");
+		$result_insert = mysql_query($query, $connect) or die("error".__LINE__);
 	}
 }
 else // New
 {
 	// document table
-	$query = "INSERT INTO documents (nick_name, picture_path, audio_path, location, device_id, content) ";
-	$query .= "VALUES ('$req_nick_name', '$picture_path', '$audio_path', '$req_latitude,$req_longitude', '$req_device_id', '$req_comment')";
-	$result_insert = mysql_query($query, $connect) or die("error");
+	$query = "INSERT INTO documents (nick_name, picture_path, audio_path, latitude, longitude, device_id, content) ";
+	$query .= "VALUES ('$req_nick_name', '$picture_path', '$audio_path', '$req_latitude', '$req_longitude', '$req_device_id', '$req_content')";
+	$result_insert = mysql_query($query, $connect) or die("error".__LINE__);
 	$inserted_document_srl = mysql_insert_id();
 
 	// document_srls table
 	$array_srl_list = explode(",", $req_tag_srl_list);
 	foreach ($array_srl_list as $key=>$val) {
+		$query = "SELECT tag_srl FROM tags WHERE name='$val'";
+		$result_tag = mysql_query($query, $connect) or die("error".__LINE__);
+		$row_tag = mysql_fetch_array($result_tag);
+		if (!$row_tag) {
+			$query = "INSERT INTO tags (name) ";
+			$query .= "VALUES ('$val')";
+			$result_insert = mysql_query($query, $connect) or die("error".__LINE__);
+			$tag_srl = mysql_insert_id();
+		}
+		else {
+			$tag_srl = $row_tag[tag_srl];
+		}		
+
+		// document_tag table
 		$query = "INSERT INTO document_tags (document_srl, tag_srl) ";
-		$query .= "VALUES (".$inserted_document_srl.", $val)";
-		$result_insert = mysql_query($query, $connect) or die("error");
+		$query .= "VALUES ($inserted_document_srl, $tag_srl)";
+		$result_insert = mysql_query($query, $connect) or die("error".$query.$val.__LINE__);
 	}
 }
 

@@ -1,20 +1,19 @@
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 <?php
 include ("connection.php");
 
 // Parameters
-$req_document_srl = $_POST["document_srl"];
-$req_device_id = $_POST["device_id"];
-$req_nick_name = $_POST["nick_name"];
-$req_latitude = $_POST["latitude"];
-$req_longitude = $_POST["longitude"];
-$req_content = $_POST["content"];
+$req_document_srl = $_GET["document_srl"];
+$req_device_id = $_GET["device_id"];
+$req_nick_name = $_GET["nick_name"];
+$req_latitude = $_GET["latitude"];
+$req_longitude = $_GET["longitude"];
+$req_content = $_GET["content"];
 
 // File Upload
 $is_error = false;
 
 // DB Handling
-if ($req_document_srl) // Modify
+if ($req_comment_srl) // Modify
 {
 	$query = "UPDATE comments SET nick_name='$req_nick_name', " ;
 	$query.= "latitude='$req_latitude', ";
@@ -28,7 +27,7 @@ else // New
 {
 	// document table
 	$query = "INSERT INTO comments (document_srl, nick_name, latitude, longitude, device_id, content) ";
-	$query .= "VALUES ('$req_document_srl', '$req_nick_name', '$req_latitude', '$req_longitude', '$req_device_id', '$req_comment')";
+	$query .= "VALUES ('$req_document_srl', '$req_nick_name', '$req_latitude', '$req_longitude', '$req_device_id', '$req_content')";
 	$result_insert = mysql_query($query, $connect) or die("error");
 }
 

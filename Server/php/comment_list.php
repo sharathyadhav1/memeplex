@@ -14,7 +14,7 @@ if ($req_device_id) {
 }
 
 $query.= " AND document_srl = $req_document_srl";
-$query.= " ORDER BY timestamp DESC";
+$query.= " ORDER BY timestamp ASC";
 
 //echo $query;
 $result = mysql_query($query, $connect) or die(" : ".mysql_error());
