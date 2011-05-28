@@ -20,6 +20,8 @@ while($row=mysql_fetch_array($result))
 	$writer->startElement('THREAD');
 	$writer->writeAttribute('tag_srl', $row[tag_srl]);
 	$writer->writeAttribute('name', $row[name]);
+	$writer->writeAttribute('color', $row[color]);
+	$writer->writeAttribute('size', $row[size]);
 	$writer->writeAttribute('score_day', $row[score_day]);
 	$writer->writeAttribute('score_week', $row[score_week]);
 	$writer->writeAttribute('score_month', $row[score_month]);
