@@ -21,7 +21,7 @@ if ($req_device_id) {
 
 // 글 하나만 보기
 if ($req_document_srl) {
-	$query.= " AND document_srl = $req_document_srl";
+	$query.= " AND documents.document_srl = $req_document_srl";
 }
 $query.= " ORDER BY timestamp DESC";
 
@@ -29,6 +29,7 @@ $query.= " ORDER BY timestamp DESC";
 $result = mysql_query($query, $connect) or die(" : ".mysql_error());
 
 // XML Output
+header("Content-Type: text/xml;");
 $writer = new XMLWriter();
 $writer->openURI('php://output');
 $writer->startDocument('1.0','UTF-8');
@@ -37,15 +38,21 @@ $writer->setIndent(4);
 $writer->startElement('THREADLIST');
 while($row=mysql_fetch_array($result))
 {
+	$query_count = "SELECT count(*) AS comment_count FROM comments WHERE document_srl = ".$row[document_srl];
+	$result_count = mysql_query($query_count, $connect) or die("counting error : ".mysql_error());
+	$row_count = mysql_fetch_array($result_count);
+	
 	$writer->startElement('THREAD');
 	$writer->writeAttribute('document_srl', $row[document_srl]);
 	$writer->writeAttribute('nick_name', $row[nick_name]);
 	$writer->writeAttribute('picture_path', $row[picture_path]);
 	$writer->writeAttribute('audio_path', $row[audio_path]);
-	$writer->writeAttribute('location', $row[location]);
-	$writer->writeAttribute('timestamp', $row[timestamp]);
+	$writer->writeAttribute('latitude', $row[latitude]);
+	$writer->writeAttribute('longitude', $row[longitude]);
+	$writer->writeAttribute('timestamp', strtotime("now")-strtotime($row[timestamp]));
 	$writer->writeAttribute('device_id', $row[device_id]);
 	$writer->writeAttribute('content', $row[content]);
+	$writer->writeAttribute('comment_count', $row_count[comment_count]);
 	$writer->endElement();
 }
 $writer->endElement();

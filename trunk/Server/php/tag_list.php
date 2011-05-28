@@ -9,6 +9,7 @@ $query.= " ORDER BY score_day DESC LIMIT 49";
 $result = mysql_query($query, $connect) or die(" : ".mysql_error());
 
 // XML Output
+header("Content-Type: text/xml;");
 $writer = new XMLWriter();
 $writer->openURI('php://output');
 $writer->startDocument('1.0','UTF-8');
