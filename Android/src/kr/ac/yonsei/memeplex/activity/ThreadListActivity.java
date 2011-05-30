@@ -4,6 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kr.ac.yonsei.memeplex.R;
+import kr.ac.yonsei.memeplex.TagInfo;
+import kr.ac.yonsei.memeplex.ThreadArticle;
+import kr.ac.yonsei.memeplex.api.DataLoaderListener;
+import kr.ac.yonsei.memeplex.api.DataLoaderTask;
+import kr.ac.yonsei.memeplex.util.TimeUtility;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -16,9 +26,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ThreadListActivity extends ListActivity {
+public class ThreadListActivity extends ListActivity implements DataLoaderListener {
     private ArrayList<ThreadArticle> list;
+    private ArrayList<TagInfo> tagList;
     private CustomAdapter adapter;
 
     @Override
@@ -26,10 +38,15 @@ public class ThreadListActivity extends ListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.thread_list);
         
-        list = new ArrayList<ThreadArticle>();
+        tagList = (ArrayList<TagInfo>) getIntent().getSerializableExtra("tags");
         
+        list = new ArrayList<ThreadArticle>();
         adapter = new CustomAdapter(this, R.layout.thread_list_row, list);
+
         setListAdapter(adapter);
+        
+        TextView tvTagList = (TextView) findViewById(R.id.TextViewTagList);
+        tvTagList.setText(getTagTextList());
         
         Button btnBackToTagList = (Button) findViewById(R.id.ButtonBackToTagList);
         btnBackToTagList.setOnClickListener(new View.OnClickListener() {
@@ -45,36 +62,57 @@ public class ThreadListActivity extends ListActivity {
             }
         });
         
-        /* 
-         * 시연용 코드
-         */
-        
-        list.add(new ThreadArticle("베이비", "저도 노래를 불러보았습니다", "", "12분 전", "", "2", "노래",
-                false, true, false));
-        list.add(new ThreadArticle("자웅동체", "나는 숙제한다. 고로 존재한다.", "", "13분 전", "", "0", "숙제 과제",
-                false, false, false));
-        list.add(new ThreadArticle("연세인", "저도 A+를 받아보고 싶습니다. 어떻게 해야하나요?", "", "18분 전", "", "0", "연세 성적",
-                false, false, false));
-        list.add(new ThreadArticle("고장닉", "이게 누구인지 아는 사람?", "", "20분 전", "", "1", "자유",
-                true, false, false));
-        list.add(new ThreadArticle("암컷", "나 여자임. 목소리랑 사진 인증! 형들아 관심 좀..", "", "25분 전", "", "8", "여자 인증",
-                true, true, false));
-        
-        adapter.notifyDataSetChanged();
+        refreshThreadList();
     }
     
+    private void refreshThreadList() {
+        String srlList = getSrlListFromTags();
+        String apiUrl = "http://memeplex.ohmyenglish.co.kr/thread_list.php?tag_srl_list=" + srlList;
+
+        DataLoaderTask task = new DataLoaderTask(this, this);
+        task.execute(apiUrl);
+    }
+
+    private String getSrlListFromTags() {
+        StringBuilder sb = new StringBuilder();
+        
+        for (TagInfo tag : tagList) {
+            sb.append(tag.getSrl());
+            sb.append(',');
+        }
+        
+        if (sb.length() > 0)
+            sb.deleteCharAt(sb.length() - 1);
+        
+        return sb.toString();
+    }
+    
+    private String getTagTextList() {
+        StringBuilder sb = new StringBuilder();
+        
+        for (TagInfo tag : tagList) {
+            sb.append(tag.getTag());
+            sb.append(',');
+        }
+        
+        if (sb.length() > 0)
+            sb.deleteCharAt(sb.length() - 1);
+        
+        return sb.toString();
+    }
+
     @Override
     protected void onListItemClick(ListView l, View v, int position, long id) {
-        // TODO Auto-generated method stub
         super.onListItemClick(l, v, position, id);
         
         Intent intent = new Intent(getApplicationContext(), ThreadViewActivity.class);
         
-        intent.putExtra("author", list.get(position).getAuthor());
-        intent.putExtra("message", list.get(position).getMessage());
+        intent.putExtra("nickname", list.get(position).getNickname());
+        intent.putExtra("content", list.get(position).getContent());
+        intent.putExtra("picturePath", list.get(position).getPicturePath());
         intent.putExtra("passed", list.get(position).getPassed());
-        intent.putExtra("msgid", list.get(position).getMsgid());
-        intent.putExtra("tags", list.get(position).getTags());
+        intent.putExtra("docSrl", list.get(position).getDocSrl());
+        intent.putExtra("thread_tags", getTagTextList());
         
         startActivity(intent);
     }
@@ -84,78 +122,6 @@ public class ThreadListActivity extends ListActivity {
         startActivity(intent);
     }
 
-    public class ThreadArticle
-    {
-        private String author;
-        private String message;
-        private String date;
-        private String passed;
-        private String msgid;
-        private String reply;
-        private String tags;
-        
-        private boolean hasImage;
-        private boolean hasVoiceRecord;
-        private boolean hasPlaceInfo;
-        
-        public ThreadArticle(String author, String message, String date, String passed,
-                String msgid, String reply, String tags, boolean hasImage, boolean hasVoiceRecord,
-                boolean hasPlaceInfo)
-        {
-            this.author = author;
-            this.message = message;
-            this.date = date;
-            this.passed = passed;
-            this.msgid = msgid;
-            this.reply = reply;
-            this.tags = tags;
-            
-            this.hasImage = hasImage;
-            this.hasVoiceRecord = hasVoiceRecord;
-            this.hasPlaceInfo = hasPlaceInfo;
-        }
-
-        public String getMsgid() {
-            return msgid;
-        }
-
-        public String getReply() {
-            return reply;
-        }
-
-        public String getAuthor() {
-            return author;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public String getDate() {
-            return date;
-        }
-        
-        public String getPassed() {
-            return passed;
-        }
-        
-        public String getTags() {
-            return tags;
-        }
-        
-        public boolean hasImage() {
-            return hasImage;
-        }
-        
-        public boolean hasVoiceRecord() {
-            return hasVoiceRecord;
-        }
-        
-        public boolean hasPlaceInfo() {
-            return hasPlaceInfo;
-        }
-    }
-    
     private class CustomAdapter extends ArrayAdapter<ThreadArticle>
     {
         @Override
@@ -175,18 +141,18 @@ public class ThreadListActivity extends ListActivity {
             ThreadArticle threadArticle = list.get(position);
             
             if(threadArticle != null) {
-                tvmessage.setText(threadArticle.getMessage());
+                tvmessage.setText(threadArticle.getContent());
                 tvmessage.setTextColor(0xFFFFFFFF);
                 
-                String writeInfo = threadArticle.getAuthor();
+                String writeInfo = threadArticle.getNickname();
                 
-                if (threadArticle.getPassed().length() > 0) {
-                    writeInfo += ", " + threadArticle.getPassed();    // 지난 시간
+                if (threadArticle.getPassed() > 0) {
+                    writeInfo += ", " + TimeUtility.getTimePassedString(threadArticle.getPassed());    // 지난 시간
                 }
                 
                 tvwriteinfo.setText(writeInfo);
                 
-                if(Integer.parseInt(threadArticle.getReply()) > 0) {
+                if(threadArticle.getReply() > 0) {
                     tvreplies.setVisibility(View.VISIBLE);
                     tvreplies.setText("(" + threadArticle.getReply() + ")");
                 }
@@ -196,20 +162,15 @@ public class ThreadListActivity extends ListActivity {
             }
             
             ImageView imgHasImage = (ImageView)v.findViewById(R.id.ImageHasImage);
-            ImageView imgHasVoiceRecord = (ImageView)v.findViewById(R.id.ImageHasVoiceRecord);
             
             if (threadArticle.hasImage()) {
                 imgHasImage.setVisibility(View.VISIBLE);
             } else {
                 imgHasImage.setVisibility(View.GONE);
             }
-
-            if (threadArticle.hasVoiceRecord()) {
-                imgHasVoiceRecord.setVisibility(View.VISIBLE);
-            } else {
-                imgHasVoiceRecord.setVisibility(View.GONE);
-            }
             
+            tvwriteinfo.requestLayout();
+
             return v;
         }
 
@@ -217,5 +178,35 @@ public class ThreadListActivity extends ListActivity {
                 List<ThreadArticle> objects) {
             super(context, textViewResourceId, objects);
         }
+    }
+
+    public void onDataLoadingFinish(Document doc, int id) {
+        if (doc == null) {
+            Toast t = Toast.makeText(this, "데이터를 가져올 수 없습니다.", Toast.LENGTH_SHORT);
+            t.show();
+            return;
+        }
+        
+        adapter.clear();
+        
+        NodeList tags = doc.getElementsByTagName("THREAD");
+        for (int i = 0; i < tags.getLength(); ++i) {
+            NamedNodeMap attrs = tags.item(i).getAttributes();
+            
+            String nickname = attrs.getNamedItem("nick_name").getNodeValue();
+            String content = attrs.getNamedItem("content").getNodeValue();
+            String picturePath = attrs.getNamedItem("picture_path").getNodeValue();
+            int docSrl = Integer.parseInt(attrs.getNamedItem("document_srl").getNodeValue());
+            int reply = Integer.parseInt(attrs.getNamedItem("comment_count").getNodeValue());
+            int passed = Integer.parseInt(attrs.getNamedItem("timestamp").getNodeValue());
+
+            list.add(new ThreadArticle(nickname, content, docSrl, reply, passed, picturePath));
+        }
+        
+        adapter.notifyDataSetChanged();
+    }
+
+    public void onDataLoadingCancel() {
+        finish();
     }
 }
