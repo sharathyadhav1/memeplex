@@ -15,10 +15,11 @@ $writer->openURI('php://output');
 $writer->startDocument('1.0','UTF-8');
 $writer->setIndent(4);
 
-$writer->startElement('TAGLIST');
+$writer->startElement('CLOUD');
+$writer->writeAttribute('name', "인기 태그");
 while($row=mysql_fetch_array($result))
 {
-	$writer->startElement('THREAD');
+	$writer->startElement('TAG');
 	$writer->writeAttribute('tag_srl', $row[tag_srl]);
 	$writer->writeAttribute('name', $row[name]);
 	$writer->writeAttribute('color', $row[color]);
