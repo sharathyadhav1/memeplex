@@ -10,10 +10,10 @@
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_marginTop="4dip"
 		android:orientation="horizontal" android:layout_weight="0">
-		<Button android:id="@+id/ButtonGuestBookWriteReply"
+		<Button android:id="@+id/ButtonWriteComment"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:layout_weight="1" android:text="코멘트" />
-		<Button android:id="@+id/ButtonGuestBookRefreshReply"
+		<Button android:id="@+id/ButtonRefreshComment"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
 			android:layout_weight="1" android:text="새로고침" />
 	</LinearLayout>

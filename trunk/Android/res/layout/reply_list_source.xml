@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="wrap_content"
 	android:orientation="vertical">
 
+	<!--
 	<TextView android:layout_width="fill_parent" android:id="@+id/TextTags"
 		android:text="학교 여자 숙제 연애" android:layout_height="wrap_content"
 		android:gravity="center" android:layout_weight="0" />
-		
+	-->
+			
 	<TextView android:id="@+id/TextViewWriteInfo"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		style="@style/ListRowMultiLineTextViewLarge"
@@ -18,20 +21,9 @@
 		android:padding="3dip" android:textSize="16dip"
 		android:textColor="#FFFFFF" android:autoLink="all" />
 
-	<LinearLayout android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal">
-	
-		<ImageView android:id="@+id/ImageViewAttached"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_gravity="center" android:visibility="visible"
-			android:src="@drawable/woman" />
-			
-		<ImageView android:id="@+id/ImageViewAttached"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
-			android:layout_gravity="center" android:visibility="visible"
-			android:layout_marginLeft="75dip"
-			android:src="@drawable/voice_record_play" />
-	</LinearLayout>
+	<ImageView android:id="@+id/ImageViewAttached"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:layout_gravity="center" android:visibility="visible"
+    	android:scaleType="fitCenter" />
 	
 </LinearLayout>
