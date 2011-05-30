@@ -3,7 +3,7 @@ include ("connection.php");
 
 // Fetch Thread List
 $query = "SELECT * FROM tags WHERE 1=1 ";
-$query.= " ORDER BY score_day DESC LIMIT 49";
+$query.= " LIMIT 49";
 
 //echo $query;
 $result = mysql_query($query, $connect) or die(" : ".mysql_error());
