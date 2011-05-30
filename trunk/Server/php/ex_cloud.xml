@@ -1,18 +1,18 @@
-<Tags>
-<Cloud name="내가 만든 관심 태그">
-<Tag Color="#000000" Size="12dp" name="숙제" />
-<Tag Color="#ff0000" Size="16dp" name="여자" />
-<Tag Color="#ff0000" Size="12dp" name="디아블로" />
-<Tag Color="#ff0000" Size="12dp" name="SSD" />
-<Tag Color="#ff0000" Size="12dp" name="신촌" />
-</Cloud>
-<Cloud name="최근 IT 동향 태그">
-<Tag Color="#000000" Size="16dp" name="Memeplex" />
-<Tag Color="#ff0000" Size="12dp" name="소셜커머스" />
-<Tag Color="#ff0000" Size="12dp" name="그린IT" />
-<Tag Color="#ff0000" Size="12dp" name="SNS" />
-<Tag Color="#ff0000" Size="12dp" name="안드로이드" />
-<Tag Color="#ff0000" Size="12dp" name="아이폰" />
-<Tag Color="#ff0000" Size="12dp" name="리눅스" />
-</Cloud>
-</Tags>
+<TAGS>
+<CLOUD name="내가 만든 관심 태그">
+<TAG Color="#000000" Size="12dp" name="숙제" />
+<TAG Color="#ff0000" Size="16dp" name="여자" />
+<TAG Color="#ff0000" Size="12dp" name="디아블로" />
+<TAG Color="#ff0000" Size="12dp" name="SSD" />
+<TAG Color="#ff0000" Size="12dp" name="신촌" />
+</CLOUD>
+<CLOUD name="최근 IT 동향 태그">
+<TAG Color="#000000" Size="16dp" name="Memeplex" />
+<TAG Color="#ff0000" Size="12dp" name="소셜커머스" />
+<TAG Color="#ff0000" Size="12dp" name="그린IT" />
+<TAG Color="#ff0000" Size="12dp" name="SNS" />
+<TAG Color="#ff0000" Size="12dp" name="안드로이드" />
+<TAG Color="#ff0000" Size="12dp" name="아이폰" />
+<TAG Color="#ff0000" Size="12dp" name="리눅스" />
+</CLOUD>
+</TAGS>
