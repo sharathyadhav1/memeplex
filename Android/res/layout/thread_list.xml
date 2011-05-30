@@ -3,10 +3,14 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical">
 
-	<TextView android:layout_width="fill_parent" android:id="@+id/TextTags"
-		android:text="학교 여자 숙제 연애" android:layout_height="wrap_content"
-		android:gravity="center" android:layout_weight="0" />
-		
+	<TextView android:id="@+id/TextViewTagList"
+		android:layout_width="fill_parent"
+		android:text="태그" android:layout_height="wrap_content"
+		android:gravity="center" android:layout_weight="0"
+		style="@style/ListRowMultiLineTextViewLarge"
+		android:background="#3E3D3D" />
+
+	<!--		
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_marginTop="4dip"
 		android:orientation="horizontal" android:layout_weight="0">
@@ -19,6 +23,7 @@
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
 			android:layout_weight="0" android:text="검색" />
 	</LinearLayout>
+	-->
 	
 	<ListView android:layout_width="fill_parent"
 		android:layout_height="fill_parent" android:id="@android:id/list"

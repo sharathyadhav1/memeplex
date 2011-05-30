@@ -18,13 +18,15 @@
 		android:layout_height="wrap_content" android:src="@drawable/icon_has_image"
 		android:layout_marginLeft="5dip"
 		android:layout_below="@+id/TextViewMessage"
-		android:layout_toRightOf="@+id/TextViewWriteInfo" />
+		android:layout_toRightOf="@+id/TextViewWriteInfo"
+		android:visibility="gone" />
 
 	<ImageView android:id="@+id/ImageHasVoiceRecord" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:src="@drawable/icon_has_voice_record"
 		android:layout_marginLeft="5dip"
 		android:layout_below="@+id/TextViewMessage"
-		android:layout_toRightOf="@+id/ImageHasImage" />
+		android:layout_toRightOf="@+id/ImageHasImage"
+		android:visibility="gone" />
 
 	<TextView android:id="@+id/TextViewReply"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"

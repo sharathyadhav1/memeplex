@@ -7,13 +7,12 @@
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:layout_alignParentTop="true"
-		 />
+		android:layout_above="@+id/ButtonGetThreadList" />
 
-	<Button android:layout_width="fill_parent"
-		android:layout_height="fill_parent"
-		android:layout_marginTop="170dip"
-		android:text="선택한 태그의 스레드 보기"
-		android:layout_below="@+id/tagcloudlayout"
-		android:layout_alignParentBottom="true" />
+	<Button android:id="@+id/ButtonGetThreadList"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:layout_alignParentBottom="true"
+		android:text="선택한 태그의 스레드 보기" />
 		
 </RelativeLayout>

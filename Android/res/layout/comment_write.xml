@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical" android:padding="10dip">
+
+	<EditText android:id="@+id/EditTextNickname"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		android:maxLines="1" android:inputType="textImeMultiLine"
+		android:maxLength="20" android:layout_toLeftOf="@+id/ButtonAttachImage"
+		android:hint="닉네임" />
+
+	<EditText android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:hint="내용" android:gravity="top"
+		android:layout_weight="1"
+		android:inputType="textMultiLine" android:id="@+id/EditTextComment"
+		android:maxLength="200" />
+	
+	<Button android:id="@+id/ButtonWriteComment"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="쓰기" android:layout_alignParentRight="true" />
+</LinearLayout>

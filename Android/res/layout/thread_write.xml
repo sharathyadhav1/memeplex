@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical" android:padding="10dip">
@@ -7,7 +8,7 @@
 		android:text="학교 여자 숙제 연애" android:layout_height="wrap_content"
 		android:gravity="center" android:layout_weight="0" />
 
-	<EditText android:id="@+id/EditTextAuthor"
+	<EditText android:id="@+id/EditTextNickname"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:maxLines="1" android:inputType="textImeMultiLine"
 		android:maxLength="20" android:layout_toLeftOf="@+id/ButtonAttachImage"
@@ -16,7 +17,7 @@
 	<EditText android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:hint="내용" android:gravity="top"
 		android:layout_weight="1"
-		android:inputType="textMultiLine" android:id="@+id/EditTextMessage"
+		android:inputType="textMultiLine" android:id="@+id/EditTextContent"
 		android:maxLength="200" />
 
 	<LinearLayout android:layout_width="fill_parent"
@@ -31,17 +32,17 @@
 		<EditText android:layout_width="fill_parent"
 			android:layout_height="wrap_content" android:gravity="top"
 			android:inputType="textMultiLine" android:id="@+id/EditTextTags"
-			android:maxLength="200" />
+			android:maxLength="200" android:hint="태그는 콤마(,)로 구분하세요." />
 	</LinearLayout>
 	
 	<LinearLayout android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_weight="0"
+		android:layout_weight="1"
 		android:orientation="horizontal">
 		
 		<TextView android:layout_width="80dip"
 			android:layout_height="wrap_content"
-			android:text="Image(s)"
+			android:text="Image"
 			android:gravity="center" />
 		
 		<EditText android:layout_width="wrap_content"
@@ -50,13 +51,25 @@
 			android:inputType="textMultiLine" android:id="@+id/EditTextTags"
 			android:maxLength="200" />
 		
-		<Button android:id="@+id/ButtonAddImage"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="추가" />
+		<FrameLayout android:layout_width="fill_parent"
+	    	android:layout_height="fill_parent"
+	    	android:layout_weight="1" >
+	    	
+		    <ImageView android:id="@+id/ImageViewPicture"
+		    	android:layout_width="fill_parent"
+		    	android:layout_height="fill_parent"
+		    	android:scaleType="fitCenter" />
+		    	
+		    <TextView android:id="@+id/EditTextTouchToAttach"
+		    	android:layout_width="fill_parent"
+		    	android:layout_height="fill_parent"
+		    	android:gravity="center"
+		    	android:padding="20dip"
+		    	android:text="여기를 터치하여 사진을 첨부하세요." />
+		</FrameLayout>
 	</LinearLayout>
 	
-	<Button android:id="@+id/ButtonWrite"
+	<Button android:id="@+id/ButtonWriteThread"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:text="쓰기" android:layout_alignParentRight="true" />
