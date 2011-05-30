@@ -1,6 +1,5 @@
 package kr.ac.yonsei.memeplex.view;
 
-import kr.ac.yonsei.memeplex.activity.TagCloudActivity.TagView;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -101,6 +100,7 @@ public class TagCloudLayout extends ViewGroup {
             if (child.getVisibility() != GONE) {
                 final int childw = child.getMeasuredWidth();
                 final int childh = child.getMeasuredHeight();
+                
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
                 if (xpos + childw > width) {
                     xpos = getPaddingLeft();
@@ -108,6 +108,12 @@ public class TagCloudLayout extends ViewGroup {
                 }
                 child.layout(xpos, ypos, xpos + childw, ypos + childh);
                 xpos += childw + lp.horizontal_spacing;
+
+                // 태그 클라우드 화면을 넘어가면 안보이도록 함
+                if (ypos + childh >= getMeasuredHeight()) {
+                    child.setVisibility(View.GONE);
+                    break;
+                }
             }
         }
     }

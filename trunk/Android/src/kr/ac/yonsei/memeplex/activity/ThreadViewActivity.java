@@ -1,20 +1,41 @@
 package kr.ac.yonsei.memeplex.activity;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import kr.ac.yonsei.memeplex.R;
+import kr.ac.yonsei.memeplex.ThreadReply;
+import kr.ac.yonsei.memeplex.api.DataLoaderListener;
+import kr.ac.yonsei.memeplex.api.DataLoaderTask;
+import kr.ac.yonsei.memeplex.util.TimeUtility;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ThreadViewActivity extends ListActivity {
+public class ThreadViewActivity extends ListActivity implements DataLoaderListener {
+    private static final int REQUEST_WRITE_COMMENT = 0;
+    
     private ArrayList<ThreadReply> list;
     private CustomAdapter adapter;
 
@@ -28,46 +49,90 @@ public class ThreadViewActivity extends ListActivity {
         
         adapter = new CustomAdapter(this, R.layout.reply_list_row, list);
         setListAdapter(adapter);
+
+        getIntent().putExtra("tags", "TODO:tags");
+
+        // 스레드 첨부된 이미지가 있으면
+        final String picturePath = getIntent().getStringExtra("picturePath");
+
+        if (picturePath.length() > 0) {
+            new Thread(new Runnable() {
+                public void run() {
+                    final Drawable d = loadImageFromUrl(picturePath);
+                    
+                    final ImageView imgAttatched = (ImageView) findViewById(R.id.ImageViewAttached);
+                    Log.d("sharewhere", "!!" + imgAttatched);
+
+                    imgAttatched.post(new Runnable() {
+                        public void run() {
+                            Log.d("sharewhere", "##");
+                            
+                            if (d != null) {
+                                imgAttatched.setImageDrawable(d);
+                            }
+                        }
+                    });
+                }
+            }).start();
+        }
         
-        /*
-         * 시연용 코드
-         */
+        Button btnWriteComment = (Button) findViewById(R.id.ButtonWriteComment);
+        btnWriteComment.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent = new Intent(ThreadViewActivity.this, CommentWriteActivity.class);
+                intent.putExtra("docSrl", getIntent().getIntExtra("docSrl", 0));
+                startActivityForResult(intent, REQUEST_WRITE_COMMENT);
+            }
+        });
         
-        getIntent().putExtra("author", "암컷");
-        getIntent().putExtra("message", "나 뻥 안치고, 진짜 여자라니까.. 사진이랑 목소리로 확실히 인증한다!!");
-        getIntent().putExtra("passed", "20분 전");
-        getIntent().putExtra("tags", "여자 학교 숙제 연애");
-        getIntent().putExtra("thread_tags", "부산, 해운대구, 중동, 여자, 인증");
-        getIntent().putExtra("msgid", "12");
+        Button btnRefreshComment = (Button) findViewById(R.id.ButtonRefreshComment);
+        btnRefreshComment.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                refreshThreadComment();
+            }
+        });
         
-        list.add(new ThreadReply("의처증", "헐 진짜네... 덜덜덜", "2분 전"));
-        list.add(new ThreadReply("피리", "이쁘네 러블리~~ 저 번호 좀 주세요 혼내줄랑게", "1분 전"));
-        
-        adapter.notifyDataSetChanged();
+        refreshThreadComment();
     }
 
-    private class ThreadReply {
-        private String author;
-        private String message;
-        private String passed;
-
-        public ThreadReply(String author, String message, String passed) {
-            this.author = author;
-            this.message = message;
-            this.passed = passed;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_WRITE_COMMENT) {
+            refreshThreadComment();
         }
         
-        public String getAuthor() {
-            return author;
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void refreshThreadComment() {
+        int srl = getIntent().getIntExtra("docSrl", 0);
+        String apiUrl = "http://memeplex.ohmyenglish.co.kr/comment_list.php?document_srl=" + srl;
+
+        DataLoaderTask task = new DataLoaderTask(this, this);
+        task.execute(apiUrl);
+    }
+
+    public static Drawable loadImageFromUrl(String url) {
+        InputStream is;
+        
+        Log.d("sharewhere", "loadimage : " + url);
+        
+        try {
+            is = (InputStream) (new URL(url)).getContent();
+
+            Drawable drawable = Drawable.createFromStream(is, "src");
+            
+            Log.d("sharewhere", "i've got image!");
+            
+            return drawable;
+            
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
-        public String getMessage() {
-            return message;
-        }
-        
-        public String getTimePassedString() {
-            return passed;
-        }
+        return null;
     }
     
     private class CustomAdapter extends ArrayAdapter<ThreadReply>
@@ -109,7 +174,7 @@ public class ThreadViewActivity extends ListActivity {
                     tvreplyno.setVisibility(View.VISIBLE);
                     tvmessage.setGravity(Gravity.LEFT);
                     tvmessage.setText(gba.getMessage() + "\n" + gba.getAuthor() + ", "
-                            + gba.getTimePassedString());
+                            + TimeUtility.getTimePassedString(gba.getPassed()));
                     tvreplyno.setText(String.valueOf(position) + ")");
                 }
             }
@@ -124,20 +189,20 @@ public class ThreadViewActivity extends ListActivity {
                     TextView tvwriteinfo = (TextView) v
                             .findViewById(R.id.TextViewWriteInfo);
 
-                    tvmessage.setText(getIntent().getStringExtra("message"));
+                    tvmessage.setText(getIntent().getStringExtra("content"));
 
-                    String writeInfo = getIntent().getStringExtra("author");
+                    String writeInfo = getIntent().getStringExtra("nickname");
 
-                    String passed = getIntent().getStringExtra("passed");
-                    if (passed.length() > 0) {
-                        writeInfo += ", " + passed;
+                    int passed = getIntent().getIntExtra("passed", 0);
+                    if (passed > 0) {
+                        writeInfo += ", " + TimeUtility.getTimePassedString(passed);
                     }
                     
-                    writeInfo += "\n" + getIntent().getStringExtra("thread_tags");
+                    if (getIntent().getStringExtra("thread_tags") != null) {
+                        writeInfo += "\n" + getIntent().getStringExtra("thread_tags");
+                    }
 
                     tvwriteinfo.setText(writeInfo);
-
-                    String imageId = getIntent().getStringExtra("imageId");
                 }
             }
 
@@ -145,15 +210,31 @@ public class ThreadViewActivity extends ListActivity {
         }
     }
 
-    private String getTimePassedString(int seconds) {
-        if (seconds >= 60 * 60 * 24 * 30)
-            return seconds / (60 * 60 * 24 * 30) + "개월 전";
-        else if (seconds >= 60 * 60 * 24)
-            return seconds / (60 * 60 * 24) + "일 전";
-        else if (seconds >= 60 * 60)
-            return seconds / (60 * 60) + "시간 전";
-        else if (seconds >= 60)
-            return seconds / 60 + "분 전";
-        return "방금 전";
+    public void onDataLoadingFinish(Document doc, int id) {
+        if (doc == null) {
+            Toast t = Toast.makeText(this, "데이터를 가져올 수 없습니다.", Toast.LENGTH_SHORT);
+            t.show();
+            return;
+        }
+        
+        adapter.clear();
+        
+        NodeList tags = doc.getElementsByTagName("THREAD");
+        for (int i = 0; i < tags.getLength(); ++i) {
+            NamedNodeMap attrs = tags.item(i).getAttributes();
+            
+            String nickname = attrs.getNamedItem("nick_name").getNodeValue();
+            String content = attrs.getNamedItem("content").getNodeValue();
+            int passed = Integer.parseInt(attrs.getNamedItem("timestamp").getNodeValue());
+
+            list.add(new ThreadReply(nickname, content, passed));
+        }
+        
+        adapter.notifyDataSetChanged();
+    }
+
+    public void onDataLoadingCancel() {
+        // TODO Auto-generated method stub
+        
     }
 }
