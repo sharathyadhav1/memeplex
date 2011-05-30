@@ -15,6 +15,7 @@ $writer->openURI('php://output');
 $writer->startDocument('1.0','UTF-8');
 $writer->setIndent(4);
 
+$writer->startElement('TAGS');
 $writer->startElement('CLOUD');
 $writer->writeAttribute('name', "인기 태그");
 while($row=mysql_fetch_array($result))
@@ -30,6 +31,7 @@ while($row=mysql_fetch_array($result))
 	$writer->writeAttribute('score_year', $row[score_year]);
 	$writer->endElement();
 }
+$writer->endElement();
 $writer->endElement();
 $writer->endDocument();
 $writer->flush();
