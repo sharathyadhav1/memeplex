@@ -42,6 +42,7 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
     private static final int SELECTION_MODE_OR          = 2;
     
     private static final int MENU_SET_EXTERNAL_CLOUD    = 0;
+    private static final int MENU_SET_NEW_THREAD    	= 1;
 
     private TagCloudLayout tagCloudLayout;
     private ArrayList<TagInfo> tagList;
@@ -270,6 +271,7 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_SET_EXTERNAL_CLOUD, 0, "외부 태그 클라우드 설정");
+        menu.add(1, MENU_SET_NEW_THREAD, 1, "새 태그에 글쓰기");
         
         return super.onCreateOptionsMenu(menu);
     }
@@ -279,6 +281,10 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
         if (item.getItemId() == MENU_SET_EXTERNAL_CLOUD) {
             showSetExternalCloudUrlDialog();
         }
+        if (item.getItemId() == MENU_SET_NEW_THREAD) {
+            Intent intent = new Intent(this, ThreadWriteActivity.class);
+            startActivity(intent);
+        }        
         
         return super.onMenuItemSelected(featureId, item);
     }
