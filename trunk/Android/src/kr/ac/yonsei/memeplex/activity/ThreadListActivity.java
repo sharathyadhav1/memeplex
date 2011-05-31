@@ -143,6 +143,7 @@ public class ThreadListActivity extends ListActivity implements DataLoaderListen
     
     private void write() {
         Intent intent = new Intent(this, ThreadWriteActivity.class);
+        intent.putExtra("tags", getTagTextList());
         startActivity(intent);
     }
 

@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class TagCloudLayout extends ViewGroup {
-    private int line_height;
-
     public static class LayoutParams extends ViewGroup.LayoutParams {
         public final int horizontal_spacing;
         public final int vertical_spacing;
@@ -61,9 +59,13 @@ public class TagCloudLayout extends ViewGroup {
                 }
 
                 xpos += childw + lp.horizontal_spacing;
+                
+                if (child instanceof CloudTitleView) {
+                    xpos = getPaddingLeft();
+                    ypos += 50;
+                }
             }
         }
-        this.line_height = line_height;
 
         if (MeasureSpec.getMode(heightMeasureSpec) == MeasureSpec.UNSPECIFIED) {
             height = ypos + line_height;
@@ -94,6 +96,7 @@ public class TagCloudLayout extends ViewGroup {
         final int width = r - l;
         int xpos = getPaddingLeft();
         int ypos = getPaddingTop();
+        int line_height = 0;
 
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
@@ -102,23 +105,25 @@ public class TagCloudLayout extends ViewGroup {
                 final int childh = child.getMeasuredHeight();
                 
                 final LayoutParams lp = (LayoutParams) child.getLayoutParams();
+                line_height = Math.max(line_height, child.getMeasuredHeight() + lp.vertical_spacing);
+                
                 if (xpos + childw > width) {
                     xpos = getPaddingLeft();
                     ypos += line_height;
                 }
+                
                 child.layout(xpos, ypos, xpos + childw, ypos + childh);
                 xpos += childw + lp.horizontal_spacing;
-
-                // 태그 클라우드 화면을 넘어가면 안보이도록 함
-                if (ypos + childh >= getMeasuredHeight()) {
-                    child.setVisibility(View.GONE);
-                    break;
+                
+                if (child instanceof CloudTitleView) {
+                    xpos = getPaddingLeft();
+                    ypos += 50;
                 }
             }
         }
     }
 
-    public void addTagView(TagView tagView) {
+    public void addTagView(View tagView) {
         addView(tagView, new TagCloudLayout.LayoutParams(10, 0));
     }
 }

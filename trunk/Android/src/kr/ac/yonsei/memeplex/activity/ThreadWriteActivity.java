@@ -41,6 +41,7 @@ public class ThreadWriteActivity extends Activity implements ThreadWriteListener
         ImageView imageviewPic = (ImageView) findViewById(R.id.ImageViewPicture);
         Button btnWrite = (Button) findViewById(R.id.ButtonWriteThread);
         
+        editTags.setText(getIntent().getStringExtra("tags"));
         editTouchToAttach.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 showOptionToSelectPicture();
