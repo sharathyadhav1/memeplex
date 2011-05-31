@@ -8,20 +8,50 @@ import kr.ac.yonsei.memeplex.api.DataLoaderListener;
 import kr.ac.yonsei.memeplex.api.DataLoaderTask;
 import kr.ac.yonsei.memeplex.view.TagCloudLayout;
 import kr.ac.yonsei.memeplex.view.TagView;
+import kr.ac.yonsei.memeplex.view.TagViewListener;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
-public class TagCloudActivity extends Activity implements DataLoaderListener {
-    ArrayList<TagInfo> tagList;
+public class TagCloudActivity extends Activity implements DataLoaderListener, TagViewListener {
+    private static final int SELECTION_MODE_NOT_DECIDED = 0;
+    private static final int SELECTION_MODE_AND         = 1;
+    private static final int SELECTION_MODE_OR          = 2;
+    
+    private static final int MENU_SET_EXTERNAL_CLOUD    = 0;
+
+    private TagCloudLayout tagCloudLayout;
+    private ArrayList<TagInfo> tagList;
+    private int selectionMode = SELECTION_MODE_AND;
+    
+    private ProgressDialog progressGetLocation;
+    
+    private LocationManager mManager;
+    private LocationListener mListener;
+    private Location mLocation;
+    
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,13 +60,30 @@ public class TagCloudActivity extends Activity implements DataLoaderListener {
     
         tagList = new ArrayList<TagInfo>();
 
+        tagCloudLayout = (TagCloudLayout) findViewById(R.id.tagcloudlayout);
+        
+        Button btnDefaultTagCloud = (Button) findViewById(R.id.ButtonDefaultTagCloud);
+        Button btnExternalTagCloud = (Button) findViewById(R.id.ButtonExternalTagCloud);
         Button btnGetThread = (Button) findViewById(R.id.ButtonGetThreadList);
+        
+        btnDefaultTagCloud.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getDefaultTagCloud();
+            }
+        });
+        
+        btnExternalTagCloud.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getExternalTagCloud();
+            }
+        });
+        
         btnGetThread.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 ArrayList<TagInfo> tags = new ArrayList<TagInfo>();
                 
                 for (TagInfo tagInfo : tagList) {
-                    if (tagInfo.isSelected()) {
+                    if (tagInfo.getTagStatus() != TagInfo.TAG_STATUS_NOT_SELECTED) {
                         tags.add(tagInfo);
                     }
                 }
@@ -50,17 +97,87 @@ public class TagCloudActivity extends Activity implements DataLoaderListener {
             }
         });
         
-        getTagList();
+        
+        mManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mListener = new MyLocationListener();
+        
+        mLocation = mManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        
+        if (mLocation == null) {
+            // 위치 정보 없으면 가져올 때까지 대기
+            progressGetLocation = ProgressDialog.show(this, null, "위치 정보를 읽어오는 중입니다.", true, true);
+            mManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mListener);
+        } else {
+            // 위치 정보 있으면 바로 태그 클라우드 불러오기
+            getDefaultTagCloud();
+        }
     }
 
-    private void getTagList() {
+    // 내부 클래스로 구현한 LocationListener
+    private class MyLocationListener implements LocationListener {
+        public void onLocationChanged(Location loc) {
+            if (mLocation == null) {
+                getDefaultTagCloud();
+            }
+            
+            mLocation = loc;
+        }
+
+        public void onProviderDisabled(String provider) {
+        }
+
+        public void onProviderEnabled(String provider) {
+        }
+
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+        }
+    }
+
+    private void getDefaultTagCloud() {
+        String tagUrl = "http://memeplex.ohmyenglish.co.kr/tag_list.php";
+        
+        showTagCloud(tagUrl);
+    }
+    
+    private void getExternalTagCloud() {
+        if (hasExternalCloudUrl()) {
+            showTagCloud(getExternalCloudUrl());
+        } else {
+            Toast.makeText(TagCloudActivity.this,
+                    "외부 태그 클라우드가 설정되지 않았습니다. 메뉴키를 눌러 외부 태그 클라우드 주소를 설정해주세요."
+                    , Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void showTagCloud(String tagUrl) {
+        tagCloudLayout.removeAllViews();
+        
+        if (mLocation != null) {
+            tagUrl += "?latitude=" + mLocation.getLatitude();
+            tagUrl += "&longitude=" + mLocation.getLongitude();
+            
+            Toast.makeText(TagCloudActivity.this, "현재 위치 정보를 기반으로 태그 클라우드를 불러옵니다.",
+                    Toast.LENGTH_SHORT).show();
+        }
+        
         DataLoaderTask task = new DataLoaderTask(this, this);
-        task.execute("http://memeplex.ohmyenglish.co.kr/tag_list.php");        
+        task.execute(tagUrl);
     }
 
-    private void showThreadListWithTag(ArrayList<TagInfo> tags) {
+    private boolean hasExternalCloudUrl() {
+        String url = getExternalCloudUrl();
+        
+        return (url != null && url.length() > 0);
+    }
+    
+    private String getExternalCloudUrl() {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        return pref.getString("external_cloud_url", null);
+    }
+    
+    private void showThreadListWithTag(ArrayList<TagInfo> selectedTags) {
         Intent intent = new Intent(this, ThreadListActivity.class);
-        intent.putExtra("tags", tags);
+        intent.putExtra("tags", selectedTags);
         startActivity(intent);        
     }
 
@@ -71,28 +188,107 @@ public class TagCloudActivity extends Activity implements DataLoaderListener {
             return;
         }
         
-        NodeList tags = doc.getElementsByTagName("THREAD");
+        int srl = 0, score = 0;
+        
+        NodeList tags = doc.getElementsByTagName("TAG");
         for (int i = 0; i < tags.getLength(); ++i) {
             NamedNodeMap attrs = tags.item(i).getAttributes();
             
             String name = attrs.getNamedItem("name").getNodeValue();
-            int srl = Integer.parseInt(attrs.getNamedItem("tag_srl").getNodeValue());
-            int score = Integer.parseInt(attrs.getNamedItem("score_day").getNodeValue());
+            
+            if (attrs.getNamedItem("tag_srl") != null)
+                srl = Integer.parseInt(attrs.getNamedItem("tag_srl").getNodeValue());
+            if (attrs.getNamedItem("score_day") != null)
+                score = Integer.parseInt(attrs.getNamedItem("score_day").getNodeValue());
             
             addTagToCloud(new TagInfo(name, srl, score));
         }
     }
 
     private void addTagToCloud(TagInfo tagInfo) {
-        TagCloudLayout l = (TagCloudLayout) findViewById(R.id.tagcloudlayout);
-        
         TagView t = new TagView(this);
         t.setTagInfo(tagInfo);
-        l.addTagView(t);
+        t.setTagViewListner(this);
+        tagCloudLayout.addTagView(t);
         
         tagList.add(tagInfo);
     }
 
     public void onDataLoadingCancel() {
+    }
+
+    public void OnTagTouched(TagView tagView) {
+        TagInfo touchedTagInfo = tagView.getTagInfo();
+        int selectedCount = 0;
+        int status = TagInfo.TAG_STATUS_AND;
+        
+        for (TagInfo ti : tagList) {
+            if (ti != touchedTagInfo && ti.isSelected()) {
+                selectedCount++;
+                status = ti.getTagStatus();
+            }
+        }
+        
+        if (selectedCount == 0) {
+            touchedTagInfo.toggleSelect();
+        } else if (touchedTagInfo.isSelected()) {
+            touchedTagInfo.setTagStatus(TagInfo.TAG_STATUS_NOT);
+        } else if (touchedTagInfo.getTagStatus() == TagInfo.TAG_STATUS_NOT) {
+            touchedTagInfo.setTagStatus(TagInfo.TAG_STATUS_NOT_SELECTED);
+        } else {
+            touchedTagInfo.setTagStatus(status);
+        }
+        
+        tagView.refreshView();
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menu.add(0, MENU_SET_EXTERNAL_CLOUD, 0, "외부 태그 클라우드 설정");
+        
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (item.getItemId() == MENU_SET_EXTERNAL_CLOUD) {
+            showSetExternalCloudUrlDialog();
+        }
+        
+        return super.onMenuItemSelected(featureId, item);
+    }
+
+    private void showSetExternalCloudUrlDialog() {
+        AlertDialog.Builder builder;
+
+        LayoutInflater inflater = (LayoutInflater) this.getSystemService(LAYOUT_INFLATER_SERVICE);
+        final View layout = inflater.inflate(R.layout.dialog_input_external_cloud,
+                                       (ViewGroup)findViewById(R.id.layout_root));
+
+        builder = new AlertDialog.Builder(this);
+        builder.setTitle("외부 클라우드 URL");
+        
+        builder.setPositiveButton("저장", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                EditText editUrl = (EditText) layout.findViewById(R.id.EditTextExternalCloudUrl);
+                saveExternalCloudUrl(editUrl.getText().toString());
+                
+                getDefaultTagCloud();
+            }
+        });
+        
+        builder.setNegativeButton("취소", null);
+        
+        builder.setView(layout);
+        builder.show();
+    }
+
+    private void saveExternalCloudUrl(String url) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = pref.edit();
+                
+        editor.putString("external_cloud_url", url);
+
+        editor.commit();
     }
 }

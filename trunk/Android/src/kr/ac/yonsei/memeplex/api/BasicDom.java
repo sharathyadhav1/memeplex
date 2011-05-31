@@ -19,7 +19,7 @@ public class BasicDom {
             // Create the builder and parse the file
             URL url = new URL(uri);
             URLConnection urlconn = url.openConnection();
-            
+
             Document doc = parseInputStream(urlconn.getInputStream(), validating);
             
             return doc;

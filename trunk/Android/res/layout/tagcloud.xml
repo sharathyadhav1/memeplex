@@ -2,11 +2,31 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent">
 
+	<LinearLayout android:id="@+id/LayoutTopTabButtons"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_alignParentTop="true">
+		
+		<Button android:id="@+id/ButtonDefaultTagCloud"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="기본 클라우드" />
+
+		<Button android:id="@+id/ButtonExternalTagCloud"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="외부 클라우드" />
+			
+	</LinearLayout>
+	
 	<kr.ac.yonsei.memeplex.view.TagCloudLayout
 		android:id="@+id/tagcloudlayout"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_alignParentTop="true"
+		android:layout_below="@+id/LayoutTopTabButtons"
 		android:layout_above="@+id/ButtonGetThreadList" />
 
 	<Button android:id="@+id/ButtonGetThreadList"

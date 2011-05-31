@@ -8,9 +8,13 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 public class TagView extends TextView {
-    private static final int SELECTED_TAG_BACKGROUND_COLOR = Color.MAGENTA;
+    private static final int TAG_BACKGROUND_COLOR_NOT_SELECTED  = Color.WHITE;
+    private static final int TAG_BACKGROUND_COLOR_AND           = Color.BLUE;
+    private static final int TAG_BACKGROUND_COLOR_OR            = Color.GREEN;
+    private static final int TAG_BACKGROUND_COLOR_NOT           = Color.RED;
 
     private TagInfo tagInfo;
+    private TagViewListener listener;
     
     public TagView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -23,8 +27,7 @@ public class TagView extends TextView {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            tagInfo.toggleSelected();
-            refreshView();
+            listener.OnTagTouched(this);
         }
         
         return super.onTouchEvent(event);
@@ -35,18 +38,50 @@ public class TagView extends TextView {
         
         refreshView();
     }
+    
+    public TagInfo getTagInfo() {
+        return tagInfo;
+    }
 
-    private void refreshView() {
+    public void refreshView() {
         setText(tagInfo.getTag());
-        setTextColor(tagInfo.getTagTextColor());
-        setTextSize(tagInfo.getTagTextSize());
+        setTextColor(getTagTextColor(tagInfo));
+        setTextSize(getTagTextSize(tagInfo));
         setSingleLine(true);
         
-        if (tagInfo.isSelected()) {
-            setBackgroundColor(SELECTED_TAG_BACKGROUND_COLOR);
-        } else {
-            setBackgroundColor(tagInfo.getTagBackgroundColor());
+        switch (tagInfo.getTagStatus()) {
+        case TagInfo.TAG_STATUS_NOT_SELECTED:
+            setBackgroundColor(TAG_BACKGROUND_COLOR_NOT_SELECTED);
+            break;
+        case TagInfo.TAG_STATUS_AND:
+            setBackgroundColor(TAG_BACKGROUND_COLOR_AND);
+            break;
+        case TagInfo.TAG_STATUS_OR:
+            setBackgroundColor(TAG_BACKGROUND_COLOR_OR);
+            break;
+        case TagInfo.TAG_STATUS_NOT:
+            setBackgroundColor(TAG_BACKGROUND_COLOR_NOT);
+            break;
         }
+    }
+
+    public int getTagTextColor(TagInfo tagInfo) {
+        return Color.BLACK;
+    }
+
+    public float getTagTextSize(TagInfo tagInfo) {
+        int scoreDay = tagInfo.getScoreDay();
+        
+        if (scoreDay > 400)
+            return 30.0f;
+        else if (scoreDay > 300)
+            return 28.0f;
+        else if (scoreDay > 200)
+            return 26.0f;
+        else if (scoreDay > 100)
+            return 24.0f;
+        else
+            return 22.0f;
     }
 
     public TagView setTagInfo(String tag, int color, float size) {
@@ -56,5 +91,9 @@ public class TagView extends TextView {
         this.setSingleLine(true);
         
         return this;
+    }
+
+    public void setTagViewListner(TagViewListener listener) {
+        this.listener = listener;
     }
 }

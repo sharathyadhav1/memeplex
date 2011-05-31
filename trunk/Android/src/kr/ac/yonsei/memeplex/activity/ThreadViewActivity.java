@@ -175,7 +175,7 @@ public class ThreadViewActivity extends ListActivity implements DataLoaderListen
                     tvmessage.setGravity(Gravity.LEFT);
                     tvmessage.setText(gba.getMessage() + "\n" + gba.getAuthor() + ", "
                             + TimeUtility.getTimePassedString(gba.getPassed()));
-                    tvreplyno.setText(String.valueOf(position) + ")");
+                    tvreplyno.setText(String.valueOf(position) + ".");
                 }
             }
             else {  // 원본글, 작성자 등

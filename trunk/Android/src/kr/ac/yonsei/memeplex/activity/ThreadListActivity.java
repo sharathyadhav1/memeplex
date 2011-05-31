@@ -1,5 +1,6 @@
 package kr.ac.yonsei.memeplex.activity;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,11 +67,34 @@ public class ThreadListActivity extends ListActivity implements DataLoaderListen
     }
     
     private void refreshThreadList() {
-        String srlList = getSrlListFromTags();
-        String apiUrl = "http://memeplex.ohmyenglish.co.kr/thread_list.php?tag_srl_list=" + srlList;
+        StringBuilder apiUrl = new StringBuilder("http://memeplex.ohmyenglish.co.kr/thread_list.php");
+        
+        apiUrl.append("?and=");
+        apiUrl.append(getTagListWithStatus(tagList, TagInfo.TAG_STATUS_AND));
+        apiUrl.append("&or=");
+        apiUrl.append(getTagListWithStatus(tagList, TagInfo.TAG_STATUS_OR));
+        apiUrl.append("&not=");
+        apiUrl.append(getTagListWithStatus(tagList, TagInfo.TAG_STATUS_NOT));
 
         DataLoaderTask task = new DataLoaderTask(this, this);
-        task.execute(apiUrl);
+        task.execute(apiUrl.toString());
+    }
+
+    private String getTagListWithStatus(ArrayList<TagInfo> tagList, int tagStatus) {
+        StringBuilder sb = new StringBuilder();
+        
+        for (TagInfo ti : tagList) {
+            if (ti.getTagStatus() == tagStatus) {
+                sb.append(ti.getTag());
+                sb.append(",");
+            }
+        }
+        
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        
+        return URLEncoder.encode(sb.toString());
     }
 
     private String getSrlListFromTags() {
@@ -142,7 +166,6 @@ public class ThreadListActivity extends ListActivity implements DataLoaderListen
             
             if(threadArticle != null) {
                 tvmessage.setText(threadArticle.getContent());
-                tvmessage.setTextColor(0xFFFFFFFF);
                 
                 String writeInfo = threadArticle.getNickname();
                 
