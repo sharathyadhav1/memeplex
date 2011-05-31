@@ -6,6 +6,7 @@ import kr.ac.yonsei.memeplex.R;
 import kr.ac.yonsei.memeplex.TagInfo;
 import kr.ac.yonsei.memeplex.api.DataLoaderListener;
 import kr.ac.yonsei.memeplex.api.DataLoaderTask;
+import kr.ac.yonsei.memeplex.view.CloudTitleView;
 import kr.ac.yonsei.memeplex.view.TagCloudLayout;
 import kr.ac.yonsei.memeplex.view.TagView;
 import kr.ac.yonsei.memeplex.view.TagViewListener;
@@ -62,18 +63,25 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
 
         tagCloudLayout = (TagCloudLayout) findViewById(R.id.tagcloudlayout);
         
-        Button btnDefaultTagCloud = (Button) findViewById(R.id.ButtonDefaultTagCloud);
-        Button btnExternalTagCloud = (Button) findViewById(R.id.ButtonExternalTagCloud);
+        final Button btnDefaultTagCloud = (Button) findViewById(R.id.ButtonDefaultTagCloud);
+        final Button btnExternalTagCloud = (Button) findViewById(R.id.ButtonExternalTagCloud);
         Button btnGetThread = (Button) findViewById(R.id.ButtonGetThreadList);
         
+        btnDefaultTagCloud.setSelected(true);
         btnDefaultTagCloud.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                btnDefaultTagCloud.setSelected(true);
+                btnExternalTagCloud.setSelected(false);
+                
                 getDefaultTagCloud();
             }
         });
         
         btnExternalTagCloud.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                btnDefaultTagCloud.setSelected(false);
+                btnExternalTagCloud.setSelected(true);
+                
                 getExternalTagCloud();
             }
         });
@@ -150,6 +158,7 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
     }
 
     private void showTagCloud(String tagUrl) {
+        tagList.clear();
         tagCloudLayout.removeAllViews();
         
         if (mLocation != null) {
@@ -190,18 +199,28 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
         
         int srl = 0, score = 0;
         
-        NodeList tags = doc.getElementsByTagName("TAG");
-        for (int i = 0; i < tags.getLength(); ++i) {
-            NamedNodeMap attrs = tags.item(i).getAttributes();
+        NodeList clouds = doc.getElementsByTagName("CLOUD");
+        for (int i = 0; i < clouds.getLength(); ++i) {
+            // 클라우드 타이틀 추가
+            NamedNodeMap attrs = clouds.item(i).getAttributes();
+            addCloudTitle(attrs.getNamedItem("name").getNodeValue());
             
-            String name = attrs.getNamedItem("name").getNodeValue();
-            
-            if (attrs.getNamedItem("tag_srl") != null)
-                srl = Integer.parseInt(attrs.getNamedItem("tag_srl").getNodeValue());
-            if (attrs.getNamedItem("score_day") != null)
-                score = Integer.parseInt(attrs.getNamedItem("score_day").getNodeValue());
-            
-            addTagToCloud(new TagInfo(name, srl, score));
+            NodeList tags = clouds.item(i).getChildNodes();
+
+            for (int j = 0; j < tags.getLength(); ++j) {
+                if (tags.item(j).hasAttributes()) {
+                    NamedNodeMap subattrs = tags.item(j).getAttributes();
+    
+                    String name = subattrs.getNamedItem("name").getNodeValue();
+    
+                    if (subattrs.getNamedItem("tag_srl") != null)
+                        srl = Integer.parseInt(subattrs.getNamedItem("tag_srl").getNodeValue());
+                    if (subattrs.getNamedItem("score_day") != null)
+                        score = Integer.parseInt(subattrs.getNamedItem("score_day").getNodeValue());
+    
+                    addTagToCloud(new TagInfo(name, srl, score));
+                }
+            }
         }
     }
 
@@ -212,6 +231,12 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
         tagCloudLayout.addTagView(t);
         
         tagList.add(tagInfo);
+    }
+    
+    private void addCloudTitle(String title) {
+        CloudTitleView titleView = new CloudTitleView(this);
+        titleView.setTitle(title);
+        tagCloudLayout.addTagView(titleView);
     }
 
     public void onDataLoadingCancel() {

@@ -10,29 +10,41 @@
 		
 		<Button android:id="@+id/ButtonDefaultTagCloud"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="50dip"
 			android:layout_weight="1"
-			android:text="기본 클라우드" />
+			android:text="기본 클라우드"
+			android:textColor="#FFFFFF"
+			android:background="@drawable/btn_sel_tag_cloud_tab" />
 
 		<Button android:id="@+id/ButtonExternalTagCloud"
 			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
+			android:layout_height="50dip"
 			android:layout_weight="1"
-			android:text="외부 클라우드" />
+			android:text="외부 클라우드"
+			android:textColor="#FFFFFF"
+			android:background="@drawable/btn_sel_tag_cloud_tab" />
 			
 	</LinearLayout>
+	
+	<View android:id="@+id/ViewSplitLine"
+		android:layout_width="fill_parent"
+		android:layout_height="1dip"
+		android:layout_below="@+id/LayoutTopTabButtons"
+		android:background="#e4e5e7" />
 	
 	<kr.ac.yonsei.memeplex.view.TagCloudLayout
 		android:id="@+id/tagcloudlayout"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:layout_below="@+id/LayoutTopTabButtons"
+		android:layout_below="@+id/ViewSplitLine"
 		android:layout_above="@+id/ButtonGetThreadList" />
 
 	<Button android:id="@+id/ButtonGetThreadList"
 		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
+		android:layout_height="40dip"
 		android:layout_alignParentBottom="true"
-		android:text="선택한 태그의 스레드 보기" />
+		android:layout_margin="5dip"
+		android:text="선택한 태그의 스레드 보기"
+		android:background="@drawable/button_gray" />
 		
 </RelativeLayout>
