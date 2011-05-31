@@ -18,8 +18,8 @@
 	<TextView android:id="@+id/TextViewMessage"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:layout_marginTop="4dip" android:layout_marginBottom="4dip"
-		android:padding="3dip" android:textSize="16dip"
-		android:textColor="#FFFFFF" android:autoLink="all" />
+		android:padding="3dip" android:textSize="16dip" android:textStyle="bold"
+		android:autoLink="all" />
 
 	<ImageView android:id="@+id/ImageViewAttached"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"

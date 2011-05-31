@@ -5,7 +5,7 @@
 
 	<TextView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:id="@+id/TextViewMessage"
-		android:textSize="16dip" android:padding="2dip" android:textColor="#FFFFFF"
+		android:textSize="16dip" android:padding="2dip"
 		android:layout_alignParentLeft="true" android:layout_toLeftOf="@+id/TextViewReply" />
 
 	<TextView android:layout_width="wrap_content"

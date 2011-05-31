@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+		android:id="@+id/layout_root"
+		android:orientation="vertical"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" >
+    
+	<EditText android:text="" android:id="@+id/EditTextExternalCloudUrl"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:maxLines="1" android:inputType="text" android:width="230dp"
+        	android:hint="외부 클라우드 URL을 입력하세요." />
+
+</LinearLayout>

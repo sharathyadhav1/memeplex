@@ -4,10 +4,12 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical" android:padding="10dip">
 
+	<!--
 	<TextView android:layout_width="fill_parent" android:id="@+id/TextTags"
 		android:text="학교 여자 숙제 연애" android:layout_height="wrap_content"
 		android:gravity="center" android:layout_weight="0" />
-
+	-->
+	
 	<EditText android:id="@+id/EditTextNickname"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:maxLines="1" android:inputType="textImeMultiLine"
