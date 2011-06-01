@@ -2,6 +2,7 @@ package kr.ac.yonsei.memeplex.activity;
 
 import java.io.File;
 
+import kr.ac.yonsei.memeplex.Memeplex;
 import kr.ac.yonsei.memeplex.R;
 import kr.ac.yonsei.memeplex.api.ThreadWriteListener;
 import kr.ac.yonsei.memeplex.api.ThreadWriteTask;
@@ -141,7 +142,10 @@ public class ThreadWriteActivity extends Activity implements ThreadWriteListener
     
     private void writeContent(String nickname, String content, String tags, String picPath) {
         ThreadWriteTask task = new ThreadWriteTask(this, this);
-        task.setThreadInfo(nickname, content, tags, "0", "0", "0");
+        Memeplex memeplex = (Memeplex) getApplication();
+        
+        task.setThreadInfo(nickname, content, tags, String.valueOf(memeplex.getLatitude()),
+                String.valueOf(memeplex.getLongitude()), "0");
         task.execute(pictureFilePath);
     }
 

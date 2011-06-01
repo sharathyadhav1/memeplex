@@ -2,6 +2,7 @@ package kr.ac.yonsei.memeplex.activity;
 
 import java.util.ArrayList;
 
+import kr.ac.yonsei.memeplex.Memeplex;
 import kr.ac.yonsei.memeplex.R;
 import kr.ac.yonsei.memeplex.TagInfo;
 import kr.ac.yonsei.memeplex.api.DataLoaderListener;
@@ -42,7 +43,7 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
     private static final int SELECTION_MODE_OR          = 2;
     
     private static final int MENU_SET_EXTERNAL_CLOUD    = 0;
-    private static final int MENU_SET_NEW_THREAD    	= 1;
+    private static final int MENU_SET_NEW_THREAD        = 1;
 
     private TagCloudLayout tagCloudLayout;
     private ArrayList<TagInfo> tagList;
@@ -117,6 +118,9 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
             progressGetLocation = ProgressDialog.show(this, null, "위치 정보를 읽어오는 중입니다.", true, true);
             mManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, mListener);
         } else {
+            Memeplex memeplex = (Memeplex) getApplication();
+            memeplex.setLocation(mLocation);
+            
             // 위치 정보 있으면 바로 태그 클라우드 불러오기
             getDefaultTagCloud();
         }
@@ -130,6 +134,9 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
             }
             
             mLocation = loc;
+            
+            Memeplex memeplex = (Memeplex) getApplication();
+            memeplex.setLocation(mLocation);
         }
 
         public void onProviderDisabled(String provider) {
@@ -280,11 +287,10 @@ public class TagCloudActivity extends Activity implements DataLoaderListener, Ta
     public boolean onMenuItemSelected(int featureId, MenuItem item) {
         if (item.getItemId() == MENU_SET_EXTERNAL_CLOUD) {
             showSetExternalCloudUrlDialog();
-        }
-        if (item.getItemId() == MENU_SET_NEW_THREAD) {
+        } else if (item.getItemId() == MENU_SET_NEW_THREAD) {
             Intent intent = new Intent(this, ThreadWriteActivity.class);
             startActivity(intent);
-        }        
+        }
         
         return super.onMenuItemSelected(featureId, item);
     }
