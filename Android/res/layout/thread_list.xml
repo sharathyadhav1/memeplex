@@ -38,10 +38,14 @@
 		android:orientation="horizontal" android:layout_weight="0">
 		<Button android:id="@+id/ButtonBackToTagList"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_weight="1" android:text="태그로 돌아가기" />
+			android:layout_weight="1" android:text="태그 목록" />
+
+		<Button android:id="@+id/ButtonRefreshThreadList"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:layout_weight="1" android:text="새로고침" />
 
 		<Button android:id="@+id/ButtonWriteOnThisTag"
 			android:layout_width="fill_parent" android:layout_height="wrap_content"
-			android:layout_weight="1" android:text="이 태그에 글 쓰기" />
+			android:layout_weight="1" android:text="글쓰기" />
 	</LinearLayout>
 </LinearLayout>
