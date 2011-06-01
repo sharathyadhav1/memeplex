@@ -47,8 +47,11 @@ $writer->endElement();
 $MAX_DISTANCE = 100.0; //(in Km)
 
 // List Query 
-$query = "SELECT tags.* FROM tags, (SELECT DISTINCT tag_srl FROM document_tags LEFT OUTER JOIN (SELECT document_srl, TRUNCATE(GeoDistance(latitude, longitude, $req_latitude, $req_longitude), 3) AS distance_km FROM documents ";
-$query.= "WHERE GeoDistance(latitude, longitude, $req_latitude, $req_longitude) < $MAX_DISTANCE) AS tbl_nearest ON document_tags.document_srl = tbl_nearest.document_srl ORDER BY distance_km ASC) AS tbl_nearest_tag_srls WHERE tags.tag_srl = tbl_nearest_tag_srls.tag_srl LIMIT 13" ;
+$query = "SELECT DISTINCT tags.* FROM (SELECT tag_srl FROM document_tags, (SELECT document_srl, TRUNCATE (GeoDistance(latitude, longitude, $req_latitude, $req_longitude), 3) AS distance_km FROM documents WHERE GeoDistance(latitude, longitude, $req_latitude, $req_longitude) < 1000 ORDER BY distance_km ASC) AS tbl_a ";
+$query.= "WHERE document_tags.document_srl = tbl_a.document_srl) AS tbl_b, tags WHERE tbl_b.tag_srl = tags.tag_srl LIMIT 13";
+
+//$query = "SELECT tags.* FROM tags, (SELECT DISTINCT tag_srl FROM document_tags LEFT OUTER JOIN (SELECT document_srl, TRUNCATE(GeoDistance(latitude, longitude, $req_latitude, $req_longitude), 3) AS distance_km FROM documents ";
+//$query.= "WHERE GeoDistance(latitude, longitude, $req_latitude, $req_longitude) < $MAX_DISTANCE) AS tbl_nearest ON document_tags.document_srl = tbl_nearest.document_srl ORDER BY distance_km ASC) AS tbl_nearest_tag_srls WHERE tags.tag_srl = tbl_nearest_tag_srls.tag_srl LIMIT 13" ;
 $result = mysql_query($query, $connect) or die(" : ".mysql_error());
 
 $writer->startElement('CLOUD');
