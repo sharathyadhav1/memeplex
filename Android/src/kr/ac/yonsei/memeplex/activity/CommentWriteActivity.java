@@ -2,6 +2,7 @@ package kr.ac.yonsei.memeplex.activity;
 
 import java.net.URLEncoder;
 
+import kr.ac.yonsei.memeplex.Memeplex;
 import kr.ac.yonsei.memeplex.R;
 import kr.ac.yonsei.memeplex.api.DataLoaderListener;
 import kr.ac.yonsei.memeplex.api.DataLoaderTask;
@@ -46,10 +47,13 @@ public class CommentWriteActivity extends Activity implements DataLoaderListener
     }
 
     private void writeComment(String nickname, String comment) {
+        Memeplex memeplex = (Memeplex) getApplication();
+        
         String apiUrl = "http://memeplex.ohmyenglish.co.kr/comment_save.php?document_srl=" + srl;
         apiUrl += "&nick_name=" + URLEncoder.encode(nickname);
         apiUrl += "&content=" + URLEncoder.encode(comment);
-        apiUrl += "&latitude=0&longitude=0";
+        apiUrl += "&latitude=" + memeplex.getLatitude();
+        apiUrl += "&longitude=" + memeplex.getLongitude();
         apiUrl += "&device_id=0";
 
         DataLoaderTask task = new DataLoaderTask(this, this);

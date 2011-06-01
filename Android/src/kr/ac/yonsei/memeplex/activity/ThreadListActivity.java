@@ -30,6 +30,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ThreadListActivity extends ListActivity implements DataLoaderListener {
+    private static final int REQUEST_WRITE_THREAD = 0;
+
     private ArrayList<ThreadArticle> list;
     private ArrayList<TagInfo> tagList;
     private CustomAdapter adapter;
@@ -53,6 +55,13 @@ public class ThreadListActivity extends ListActivity implements DataLoaderListen
         btnBackToTagList.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
+            }
+        });
+        
+        Button btnRefreshThreadList = (Button) findViewById(R.id.ButtonRefreshThreadList);
+        btnRefreshThreadList.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                refreshThreadList();
             }
         });
         
@@ -144,7 +153,16 @@ public class ThreadListActivity extends ListActivity implements DataLoaderListen
     private void write() {
         Intent intent = new Intent(this, ThreadWriteActivity.class);
         intent.putExtra("tags", getTagTextList());
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_WRITE_THREAD);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_WRITE_THREAD) {
+            refreshThreadList();
+        }
+        
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private class CustomAdapter extends ArrayAdapter<ThreadArticle>
